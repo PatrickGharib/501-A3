@@ -1,7 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import org.jdom2.*;
 import org. jdom2.output.*;
@@ -18,11 +15,17 @@ public class Sender {
     }
     private static void sendToSerializer(int port, String host, ArrayList<Object> objectToSerialize){
         for (Object object: objectToSerialize){
-            Class classObject = object.getClass();
-            System.out.println("Serializing object " +
-                    classObject.getName() + "...");
-            //TODO make method in Serializer to serialize the object
-            Document doc = Serializer.serializeObject(object);
+            try {
+                Class classObject = object.getClass();
+                System.out.println("Serializing object " +
+                        classObject.getName() + "...");
+                //TODO make method in Serializer to serialize the object
+                Document doc = Serializer.serializeObject(object);
+                File f = generateXML(doc);
+                sendFileToReciever(port,host,f);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
     }
@@ -39,5 +42,33 @@ public class Sender {
             e.printStackTrace();
         }return f;
     }
+    private static void sendFileToReciever(int port, String host, File f){
+        try {
+            Socket s = new Socket(host, port);
+            System.out.println("Establishing connection...\n" +
+                    "Connection established, connected to "+ s.getRemoteSocketAddress());
+            FileInputStream fis = new FileInputStream(f);
+            OutputStream os = s.getOutputStream();
+            int readBytes = 0;
+            byte bytesInFile[] = new byte[1024*1024];
+            while(0 < (readBytes = fis.read(bytesInFile))){os.write(bytesInFile,0,readBytes);}
+            fis.close();
+            os.close();
+            s.close();
+            System.out.println("File successfully sent");
+        } catch (UnknownHostException e1) {
+            e1.printStackTrace();
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
 
-}
+        }
+
+
+    }
+
+
+
+
