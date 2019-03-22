@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ObjectCreator{
@@ -71,7 +72,7 @@ public class ObjectCreator{
        return newReferenceObject;
     }
     private static PrimArrayObject createPrimitiveArrayObject(){
-        System.out.println("PimArrayObject has one field:" +
+        System.out.println("PrimArrayObject has one field:" +
                 "\n\t- intArray");
         Scanner userin = new Scanner(System.in);
         int arrayLength;
@@ -88,7 +89,7 @@ public class ObjectCreator{
                     primitiveArray[i] + ":" );
             while(!userin.hasNextInt()){
                 userin.next();
-                System.out.println("Please enter a valid Integer");
+                System.out.println("Please enter a valid Integer!");
             }
             primitiveArray[i] = userin.nextInt();
         }
@@ -96,5 +97,44 @@ public class ObjectCreator{
         PrimArrayObject newPrimArrayObject = new PrimArrayObject(primitiveArray);
         System.out.println("done...");
         return newPrimArrayObject;
+    }
+
+    private static ReferenceArrayObject createReferenceArrayObject(){
+        System.out.println("ReferenceArrayObject has one Field: " +
+                "\n\t- objectArrayField");
+        Scanner userin = new Scanner(System.in);
+        System.out.println("Please enter the number of obejcts you would like to create: ");
+        while (!userin.hasNextInt()){
+            userin.next();
+            System.out.println("Please enter a valid Integer!");
+        }
+        int numOfObjects = userin.nextInt();
+        Object[] objectArray = new Object[numOfObjects];
+        for (int i = 0; i < numOfObjects; i++){
+            System.out.println("Creating object #" + i);
+            objectArray[i] = createSimpleObject();
+        }
+        System.out.println("creation of object with object array in progress...");
+        ReferenceArrayObject newReferenceArrayObject = new ReferenceArrayObject(objectArray);
+        System.out.println("done...");
+
+        return newReferenceArrayObject;
+    }
+    private static CollectionObject createCollectionObject(){
+        System.out.println("Collection object has one field: " +
+                "\n\t- collectionField");
+        Scanner userin = new Scanner(System.in);
+        ArrayList<Object> objectArrayList = new ArrayList<Object>();
+        System.out.println("Please select which object you wish to add to the array list: " +
+                "1) Simple object with primitive fields" +
+                "2) Object containing references to other objects\n" +
+                "3) Object containing array of primitives\n" +
+                "4) Object that contains an array of object references\n" +
+                "5) quit collection making");
+        while (!userin.hasNextInt()){
+            userin.next();
+            System.out.println("Please enter a valid integer!");
+        }
+
     }
 }
