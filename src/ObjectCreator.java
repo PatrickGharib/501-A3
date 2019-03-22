@@ -2,41 +2,51 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ObjectCreator {
-    public static void main(String[] args) {
-
-
-    }
-
-    //TODO give this a return type
-    private static void userCreationPrompt() {
+    private static ArrayList<Object> objectsToSerialize;
+    
+    private static ArrayList<Object> userCreationPrompt() {
         System.out.println("Please Proceed in creating the objects you wish to send: \n" +
                 "1) Simple object with primitive fields\n" +
                 "2) Object containing references to other objects\n" +
                 "3) Object containing array of primitives\n" +
                 "4) Object that contains an array of object references\n" +
                 "5) collection objects that refers to other objects" +
-                "6) serialize" +
+                "6) serialize\n" +
                 "7) quit");
         Scanner userIn = new Scanner(System.in);
-        int choice = userIn.nextInt();
+        while(true){
         while (!userIn.hasNextInt()) {
+            userIn.next();
             System.out.println("Please enter a valid ");
-            choice = userIn.nextInt();
         }
+        int choice = userIn.nextInt();
         switch (choice) {
             case 1:
-                SimpleObject newSimpleObject = createSimpleObject();
+                objectsToSerialize.add(createSimpleObject());
+                break;
             case 2:
-                //TODO create object with object reference
-                //create reference object
+                objectsToSerialize.add(createReferenceObject());
+                break;
             case 3:
-                //TODO create object with array of prims
+                objectsToSerialize.add(createPrimitiveArrayObject());
+                break;
             case 4:
-                //TODO create object with array of objects
+                objectsToSerialize.add(createReferenceArrayObject());
+                break;
             case 5:
-                //TODO create a collection of objects
+                objectsToSerialize.add(createCollectionObject());
+                break;
             case 6:
+                return objectsToSerialize;
             case 7:
+                System.out.println("bye bye :)");
+                System.exit(0);
+
+                default:
+                    System.out.println("Not a specified option try again!");
+
+
+        }
         }
     }
 
@@ -129,7 +139,7 @@ public class ObjectCreator {
                 "\n\t- collectionField");
         Scanner userin = new Scanner(System.in);
         ArrayList<SimpleObject> objectArrayList = new ArrayList<SimpleObject>();
-        CollectionObject newCollectionObject;
+        CollectionObject newCollectionObject = null ;
         while (true) {
 
             System.out.println("would you like to add an object to the coollection(0->yes, 1-> no)?: ");

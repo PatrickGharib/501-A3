@@ -1,5 +1,5 @@
 public class ReferenceArrayObject {
-    private Object[] ObjArrayField;
+    private SimpleObject[] ObjArrayField;
     public ReferenceArrayObject(){}
-    public ReferenceArrayObject(Object[] simpleObjArrayParam){ObjArrayField = simpleObjArrayParam;}
+    public ReferenceArrayObject(SimpleObject[] simpleObjArrayParam){ObjArrayField = simpleObjArrayParam;}
 }
