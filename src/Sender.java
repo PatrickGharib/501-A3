@@ -22,19 +22,22 @@ public class Sender {
             System.out.println("Serializing object " +
                     classObject.getName() + "...");
             //TODO make method in Serializer to serialize the object
-            Document document = Serializer.serializeObject(object);
-            File f = new File("FileSent.xml");
-            try {
-                XMLOutputter xmlOutputter = new XMLOutputter();
-                xmlOutputter.setFormat(Format.getPrettyFormat());
-                FileWriter fw = new FileWriter(f);
-                BufferedWriter bw = new BufferedWriter(fw);
-                xmlOutputter.output(document, bw);
-                bw.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Document doc = Serializer.serializeObject(object);
+
         }
+    }
+    private static File generateXML(Document doc){
+        File f = new File("FileSent.xml");
+        try {
+            XMLOutputter xmlOut = new XMLOutputter();
+            xmlOut.setFormat(Format.getPrettyFormat());
+            FileWriter fw = new FileWriter(f);
+            BufferedWriter bw = new BufferedWriter(fw);
+            xmlOut.output(doc, bw);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }return f;
     }
 
 }
