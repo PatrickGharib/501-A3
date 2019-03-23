@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class ObjectCreator {
     private static ArrayList<Object> objectsToSerialize;
     
-    private static ArrayList<Object> userCreationPrompt() {
+    protected static ArrayList<Object> userCreationPrompt() {
         System.out.println("Please Proceed in creating the objects you wish to send: \n" +
                 "1) Simple object with primitive fields\n" +
                 "2) Object containing references to other objects\n" +
@@ -50,7 +50,7 @@ public class ObjectCreator {
         }
     }
 
-    public static SimpleObject createSimpleObject() {
+    private static SimpleObject createSimpleObject() {
         System.out.println("Simple object has two fields: " +
                 "\n\t- intField" +
                 "\n\t- booleanField");

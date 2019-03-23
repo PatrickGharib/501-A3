@@ -1,0 +1,2 @@
+public class Recieve {
+}
