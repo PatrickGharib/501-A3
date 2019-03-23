@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 import org.jdom2.*;
-import org. jdom2.output.*;
+import org.jdom2.output.*;
 import java.net.*;
 
 public class Send {
