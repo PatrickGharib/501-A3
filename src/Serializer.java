@@ -1,8 +1,8 @@
 import org.jdom2.*;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 
@@ -47,10 +47,11 @@ public class Serializer {
         ArrayList<Element> referencesInArray = new ArrayList<>();
         ArrayList<Element> valuesOfArray = new ArrayList<>();
         try {
-            objectHashMap.put(object, Integer.toString(objectHashMap.size()));
+            String objectID = Integer.toString(objectHashMap.size());
+            objectHashMap.put(objectID,object);
             objectElem = new Element("object");
             objectElem.setAttribute("class", classObject.getName());
-            objectElem.setAttribute("id", Integer.toString(objectHashMap.size()));
+            objectElem.setAttribute("id", objectID);
             doc.getRootElement().addContent(objectElem);
             if (classObject.isArray()) {
                 int lengthOfArrayInt = Array.getLength(object);
@@ -88,19 +89,22 @@ public class Serializer {
             }
         }catch (IllegalAccessException e){
             e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (ArrayIndexOutOfBoundsException e) {
+        }// catch (IllegalArgumentException e) {
+           // e.printStackTrace();
+        //}
+        catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         } catch (SecurityException e) {
+            e.printStackTrace();
+        }catch(Exception e){
             e.printStackTrace();
         }
         return doc;
     }
-    public static Document initializeSerialization(Object object) {
+    public static Document serialize(Object object) {
 
         IdentityHashMap objectHashMap = new IdentityHashMap<>();
-        Element rootElem = new Element("Serialized");
+        Element rootElem = new Element("serialized");
         Document doc = new Document(rootElem);
         Document serializationDoc = serializationOfObject(object, doc, objectHashMap);
         return serializationDoc;

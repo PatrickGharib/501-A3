@@ -2,19 +2,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ObjectCreator {
-    private static ArrayList<Object> objectsToSerialize;
+    private static ArrayList<Object> listOfObjectsToSerialize;
     
-    protected static ArrayList<Object> userCreationPrompt() {
-        System.out.println("Please Proceed in creating the objects you wish to send: \n" +
-                "1) Simple object with primitive fields\n" +
-                "2) Object containing references to other objects\n" +
-                "3) Object containing array of primitives\n" +
-                "4) Object that contains an array of object references\n" +
-                "5) collection objects that refers to other objects" +
-                "6) serialize\n" +
-                "7) quit");
+    public static ArrayList<Object> userCreationPrompt() {
+
         Scanner userIn = new Scanner(System.in);
+        listOfObjectsToSerialize = new ArrayList<>();
         while(true){
+            System.out.println("Please Proceed in creating the objects you wish to send: \n" +
+                    "1) Simple object with primitive fields\n" +
+                    "2) Object containing references to other objects\n" +
+                    "3) Object containing array of primitives\n" +
+                    "4) Object that contains an array of object references\n" +
+                    "5) collection objects that refers to other objects" +
+                    "6) serialize\n" +
+                    "7) quit");
         while (!userIn.hasNextInt()) {
             userIn.next();
             System.out.println("Please enter a valid ");
@@ -22,22 +24,22 @@ public class ObjectCreator {
         int choice = userIn.nextInt();
         switch (choice) {
             case 1:
-                objectsToSerialize.add(createSimpleObject());
+                listOfObjectsToSerialize.add(createSimpleObject());
                 break;
             case 2:
-                objectsToSerialize.add(createReferenceObject());
+                listOfObjectsToSerialize.add(createReferenceObject());
                 break;
             case 3:
-                objectsToSerialize.add(createPrimitiveArrayObject());
+                listOfObjectsToSerialize.add(createPrimitiveArrayObject());
                 break;
             case 4:
-                objectsToSerialize.add(createReferenceArrayObject());
+                listOfObjectsToSerialize.add(createReferenceArrayObject());
                 break;
             case 5:
-                objectsToSerialize.add(createCollectionObject());
+                listOfObjectsToSerialize.add(createCollectionObject());
                 break;
             case 6:
-                return objectsToSerialize;
+                return listOfObjectsToSerialize;
             case 7:
                 System.out.println("bye bye :)");
                 System.exit(0);
@@ -99,7 +101,7 @@ public class ObjectCreator {
         int[] primitiveArray = new int[arrayLength];
         for (int i = 0; i < arrayLength; i++) {
             System.out.println("Please specify a number to insert at index " +
-                    primitiveArray[i] + ":");
+                    i/*primitiveArray[i]*/ + ":");
             while (!userin.hasNextInt()) {
                 userin.next();
                 System.out.println("Please enter a valid Integer!");
@@ -138,8 +140,10 @@ public class ObjectCreator {
         System.out.println("Collection object has one field: " +
                 "\n\t- collectionField");
         Scanner userin = new Scanner(System.in);
-        ArrayList<SimpleObject> objectArrayList = new ArrayList<SimpleObject>();
-        CollectionObject newCollectionObject = null ;
+        CollectionObject newCollectionObject = null;
+
+        ArrayList<SimpleObject> objectArrayList = new ArrayList<>();
+
         while (true) {
 
             System.out.println("would you like to add an object to the coollection(0->yes, 1-> no)?: ");
@@ -148,7 +152,7 @@ public class ObjectCreator {
                 SimpleObject newCollectionSimpleObject = createSimpleObject();
                 objectArrayList.add(newCollectionSimpleObject);}
             else if (choice.equals("1")){
-                newCollectionObject = new CollectionObject();
+                newCollectionObject = new CollectionObject(objectArrayList);
                 break;}
             else{
                 System.out.println("Please enter either 1 or 0!");
