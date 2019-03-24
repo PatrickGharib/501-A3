@@ -7,8 +7,6 @@ import java.util.List;
 
 public class Deserializer {
     public static Object deserialize(Document doc) {
-
-
         Element rootElem = doc.getRootElement();
         List listOfObjects = rootElem.getChildren();
         HashMap objectHashMap = new HashMap();
@@ -25,7 +23,6 @@ public class Deserializer {
     }
     private static void setFieldval(HashMap objectHashMap, List listOfObject) {
         for (int i = 0; i < listOfObject.size(); i++) {
-
             try {
                 Element objectElem = (Element) listOfObject.get(i);
                 Object instanceOfObject = objectHashMap.get(objectElem.getAttributeValue("id"));
@@ -33,35 +30,11 @@ public class Deserializer {
                 Class classObject = instanceOfObject.getClass();
                 if (classObject.isArray()) {
                     Class arrayType = classObject.getComponentType();
-                    for (int j = 0; j < listOfChildrenObjects.size(); j++) {
-                        Element aCE = (Element) listOfChildrenObjects.get(j);
-                        Object contentOfArray = deserializationOfContentElement(arrayType, aCE,
-                                objectHashMap);
-                        Array.set(instanceOfObject, j, contentOfArray);
-                    }
-                } else {
-                    for (int j = 0; j < listOfChildrenObjects.size(); j++) {
-                        Element fieldElem = (Element) listOfChildrenObjects.get(j);
-                        Class declaringClass = Class.forName(fieldElem.getAttributeValue("declaringclass"));
-                        Field field = declaringClass.getDeclaredField(fieldElem.getAttributeValue("name"));
-                        if (!Modifier.isPublic(field.getModifiers())) {
-                            field.setAccessible(true);
-                            Field modifiersField = Field.class.getDeclaredField("modifiers");
-                            modifiersField.setAccessible(true);
-                            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-                        }
-                        Class fieldType = field.getType();
-                        Element fieldContentElement = (Element) fieldElem.getChildren().get(0);
-                        Object fieldContent = deserializationOfContentElement(fieldType, fieldContentElement, objectHashMap);
-                        field.set(instanceOfObject, fieldContent);
-                    }
+                    dealWithArray(objectHashMap, listOfChildrenObjects, arrayType, instanceOfObject);
+
+                }else {
+                   dealwithEverythingElse(listOfChildrenObjects,instanceOfObject,objectHashMap);
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -113,12 +86,44 @@ public class Deserializer {
         }
         return valueObject;
     }
-    private static Object deserializationOfContentElement(Class typeOfClass, Element contentElem, HashMap ObjectHashMap) {
+    private static Object deserializationOfContentElement(Class typeOfClass, Element contentElem, HashMap objectHashMap) {
         Object contentObject;
-        if ((contentElem.getName()).equals("reference")) contentObject = ObjectHashMap.get(contentElem.getText());
-        else if ((contentElem.getName()).equals("value")) contentObject = deserializationOfFieldValue(contentElem, typeOfClass);
+        if (contentElem.getName().equals("reference")) contentObject = objectHashMap.get(contentElem.getText());
+        else if (contentElem.getName().equals("value")) contentObject = deserializationOfFieldValue(contentElem, typeOfClass);
         else contentObject = contentElem.getText();
         return contentObject;
     }
-
+    private static void dealWithArray(HashMap objectHashMap, List listOfChildrenObjects,Class arrayType, Object instanceOfObject) {
+        for (int j = 0; j < listOfChildrenObjects.size(); j++) {
+            Element aCE = (Element) listOfChildrenObjects.get(j);
+            Object contentOfArray = deserializationOfContentElement(arrayType, aCE,
+                    objectHashMap);
+            Array.set(instanceOfObject, j, contentOfArray);
+        }
+    }
+    private static void dealwithEverythingElse(List listOfChildrenObjects, Object instanceOfObject, HashMap objectHashMap){
+        for (int j = 0; j < listOfChildrenObjects.size(); j++) {
+            try {
+                Element fieldElem = (Element) listOfChildrenObjects.get(j);
+                Class declaringClass = Class.forName(fieldElem.getAttributeValue("declaringclass"));
+                Field field = declaringClass.getDeclaredField(fieldElem.getAttributeValue("name"));
+                if (!Modifier.isPublic(field.getModifiers())) {
+                    field.setAccessible(true);
+                    Field modifiersField = Field.class.getDeclaredField("modifiers");
+                    modifiersField.setAccessible(true);
+                    modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                }
+                Class fieldType = field.getType();
+                Element fieldContentElement = (Element) fieldElem.getChildren().get(0);
+                Object fieldContent = deserializationOfContentElement(fieldType, fieldContentElement, objectHashMap);
+                field.set(instanceOfObject, fieldContent);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
