@@ -106,7 +106,6 @@ public class Serializer {
         IdentityHashMap objectHashMap = new IdentityHashMap<>();
         Element rootElem = new Element("serialized");
         Document doc = new Document(rootElem);
-        Document serializationDoc = serializationOfObject(object, doc, objectHashMap);
-        return serializationDoc;
+        return serializationOfObject(object, doc, objectHashMap);
     }
 }

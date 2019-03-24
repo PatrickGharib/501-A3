@@ -7,7 +7,7 @@ import java.util.*;
 public class Inspector{
     private HashSet<Integer> uniqueObjectInspectionHash;
     public Inspector(){
-        this.uniqueObjectInspectionHash = new HashSet<Integer>();
+        this.uniqueObjectInspectionHash = new HashSet<>();
     }
     public void inspect(Object object, boolean recurseFlag) {
        HashSet<Integer> uniqueObjectInspectionHash = this.getUniqueObjectInspectionHash();
@@ -56,8 +56,8 @@ public class Inspector{
 
        if (classObj.isArray()) {
            Object[] arrayContents;
-           Class TypeOfArray = classObj.getComponentType();
-           System.out.println("Component Type: " + TypeOfArray.getName());
+           Class typeOfArray = classObj.getComponentType();
+           System.out.println("Component Type: " + typeOfArray.getName());
            if (object instanceof Object[]) {
                arrayContents = (Object[]) object;
            } else {
@@ -235,7 +235,7 @@ public class Inspector{
            if (classObjects.length > 0) {
                for (int i = 0; i < classObjects.length; i++) {
                    System.out.print(classObjects[i].getName());
-                   if (i != (classObjects.length - 1)) {
+                   if (i != classObjects.length - 1) {
                        System.out.print(",");
                    }
                }

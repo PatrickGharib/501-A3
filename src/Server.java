@@ -16,7 +16,7 @@ public class Server extends Thread{
 
         try {
             serverSocket = new ServerSocket(port);
-            serverSocket.setSoTimeout(360000);
+            serverSocket.setSoTimeout(360_000);
         } catch (IOException e) {
             e.printStackTrace();
         }
